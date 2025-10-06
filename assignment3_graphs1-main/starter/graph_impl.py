@@ -1,12 +1,17 @@
-from typing import List
-from graph_interfaces import IEdge, IGraph, IVertex
+
 from __future__ import annotations
+
+from typing import Any, Dict, List, Optional
+from graph_interfaces import IEdge, IGraph, IVertex
+
 
 # Implementation definitions
 # You should implement the bodies of the methods required by the interface protocols.
 
 class Graph(IGraph):
+
     def __init__(self) -> None:
+        self._adj_list: dict[str] = {}
         self._vertices: List[Vertex] = []
         self._edges: List[Edge] = [] 
 
@@ -25,8 +30,25 @@ class Graph(IGraph):
                   self._vertices.remove(vertex)
                   return
 
-    def add_edge(self, edge: IEdge) -> None:
-        self._edges.append(edge)
+    def add_edge(self, edge: IEdge, vertex_from_name: str, vertex_to_name: str) -> None:
+        vertex_from: Optional[IVertex] = None
+        vertex_to: Optional[IVertex] = None
+
+        for vertex in self._vertices:
+            if vertex.get_name() == vertex_from_name:
+                vertex_from = vertex
+
+            if vertex.get_name() == vertex_to_name:
+                vertex_to = vertex
+
+        if vertex_from is None or vertex_to is None:
+            raise Exception("One or more of the vertices do not exist.")
+        
+        the_edge = IEdge(edge, vertex_to)
+        vertex_from.add_edge(the_edge)
+
+        second_edge = IEdge(edge, vertex_from)
+        vertex_to.add_edge(second_edge)
 
     def remove_edge(self, edge_name: str) -> None:
         for edge in self._edges:
@@ -35,7 +57,8 @@ class Graph(IGraph):
                   return
 
 class Vertex(IVertex):
-    def __init__(self, name: str):
+
+    def __init__(self, name: str, visited: bool):
         self._name: str = name
         self._edges: List[Edge] = []
         self._visited: bool = False
@@ -65,10 +88,12 @@ class Vertex(IVertex):
         return self._visited
 
 class Edge(IEdge):
-    def __init__(self, name: str):
+
+    def __init__(self, name: str, weight: float, destination: IVertex):
         self._name: str = name
         self._vertices: List[Vertex] = []
         self._weight: float = 0
+        self._destination: IVertex = destination
 
     def get_name(self) -> str: 
         return self._name
@@ -76,8 +101,11 @@ class Edge(IEdge):
     def set_name(self, name: str) -> None: 
         self._name = name
 
-    def get_destination(self) -> IVertex: ...
+    def get_destination(self) -> IVertex: 
+        return self._destination 
 
-    def get_weight(self) -> float: ...
+    def get_weight(self) -> float: 
+        return self._weight
     
-    def set_weight(self, weight: float) -> None: ...
+    def set_weight(self, weight: float) -> None: 
+        self._weight = weight
