@@ -1,5 +1,5 @@
 from typing import Optional
-from graph_interfaces import IGraph, IVertex, IEdge
+from graph_interfaces import IGraph, IVertex
 
 def read_graph(file_path: str) -> IGraph:  
     """Read the graph from the file and return the graph object"""
@@ -11,9 +11,6 @@ def read_graph(file_path: str) -> IGraph:
             IGraph.add_vertex(vertex_from)
             IGraph.add_vertex(vertex_to)
             IGraph.add_edge(edge, vertex_from, vertex_to)
-            IEdge.set_name(edge)
-            IEdge.set_weight(weight)
-
 
 
 def print_dfs(graph: IGraph, start_vertex: IVertex) -> None: 
