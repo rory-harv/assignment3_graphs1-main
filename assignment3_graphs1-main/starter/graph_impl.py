@@ -11,7 +11,7 @@ from graph_interfaces import IEdge, IGraph, IVertex
 class Graph(IGraph):
 
     def __init__(self) -> None:
-        self._adj_list: dict[str] = {}
+        self._adj_list: dict[Vertex] = {}
         self._vertices: List[Vertex] = []
         self._edges: List[Edge] = [] 
 
@@ -30,11 +30,18 @@ class Graph(IGraph):
                   self._vertices.remove(vertex)
                   return
 
-    def add_edge(self, edge: IEdge, vertex_from_name: str, vertex_to_name: str) -> None:
-        vertex_from: Optional[IVertex] = None
-        vertex_to: Optional[IVertex] = None
+    def add_edge(self, edge: IEdge, vertex_from_name: str, vertex_to_name: str, weight: float) -> None:
+        vertex_from: Optional[Vertex] = None
+        vertex_to: Optional[Vertex] = None
+        weight: Optional[float] = weight
 
+        if vertex_from not in self._vertices:
+            self.add_vertex(vertex_from)
+        if vertex_to not in self._vertices:
+            self.add_vertex(vertex_to)
+        
         for vertex in self._vertices:
+            vertex = Vertex(vertex)
             if vertex.get_name() == vertex_from_name:
                 vertex_from = vertex
 
@@ -44,10 +51,10 @@ class Graph(IGraph):
         if vertex_from is None or vertex_to is None:
             raise Exception("One or more of the vertices do not exist.")
         
-        the_edge = IEdge(edge, vertex_to)
+        the_edge = Edge(edge, weight, vertex_to)
         vertex_from.add_edge(the_edge)
 
-        second_edge = IEdge(edge, vertex_from)
+        second_edge = Edge(edge, weight, vertex_from)
         vertex_to.add_edge(second_edge)
 
     def remove_edge(self, edge_name: str) -> None:
@@ -55,10 +62,11 @@ class Graph(IGraph):
               if edge.get_name() == edge_name:
                   self._edges.remove(edge)
                   return
+    
 
 class Vertex(IVertex):
 
-    def __init__(self, name: str, visited: bool):
+    def __init__(self, name: str):
         self._name: str = name
         self._edges: List[Edge] = []
         self._visited: bool = False
@@ -82,7 +90,7 @@ class Vertex(IVertex):
         return self._edges
 
     def set_visited(self, visited: bool) -> None:
-        self._visited = True
+        self._visited = visited
 
     def is_visited(self) -> bool:
         return self._visited
