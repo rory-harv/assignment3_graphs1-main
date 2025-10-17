@@ -50,7 +50,7 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
         '''Accepts a vertex, marks it as visited and appends to end result array.'''
         visited: bool = True
         vertex.set_visited(visited)
-        end_result.append(vertex)
+        end_result.append(vertex.get_name())
 
     while stack:
         vertex: IVertex = stack.pop()
@@ -73,80 +73,34 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
 def print_bfs(graph: IGraph, start_vertex: IVertex) -> None: 
     """Print the BFS traversal of the graph starting from the start vertex"""
     queue: List[IVertex] = []
-    nodes_visited: List[IVertex] = []
+    nodes_visited: List[str] = []
     visited: bool = False
-    
-
-            
-    adj_list: dict[str, List[str]] = {}
-
-    target = start_vertex.get_name()
 
     all_vertices = graph.get_vertices()
-    all_edges = graph.get_edges()
 
-    # for vertex in all_vertices:
-    #     if vertex != None:
-    #         print(vertex.get_name())
-    
-    target_vertex = start_vertex.get_name()
-    target_index = all_vertices.index(start_vertex)
+    for vertex in all_vertices:
+        vertex.set_visited(visited)
 
-    for vertex in all_vertices[target_index:]:
-        if vertex != None:
-            destination_vertices: List[IVertex] = []
-            for edge in vertex.get_edges():
-                if vertex.is_visited() == False and vertex.get_name() == target_vertex:
-                    destination_vertices.append(edge.get_destination().get_name())
-                    visited: bool = True
-                    vertex.set_visited(visited)
-                    visited: bool = False
-        adj_list[vertex] = destination_vertices
-        print(adj_list[vertex])
+    visited: bool = True
+    start_vertex.set_visited(visited)   # sets starter vertex as visited
 
-        
+    queue.append(start_vertex)
+    visited: bool = False
 
+    while queue:    # loops while queue exists
+        start: IVertex = queue.pop(0)    # takes first element
+        nodes_visited.append(start.get_name())  # appends to final results
+        for edge in start.get_edges():
+            destination = edge.get_destination()
+            if destination.is_visited() == False:
+                visited: bool = True    
+                destination.set_visited(visited) # sets vertex as visited
+                queue.append(destination)
+                visited: bool = False
+                if destination.get_name() not in nodes_visited:
+                    nodes_visited.append(destination.get_name())
 
-    
-    print(adj_list)
-
-
-    # for vertex in adj_list:
-    #     print(vertex)
-
-
-    # visited: bool = True
-    # start_vertex.set_visited(visited)   # sets starter vertex as visited
-    
-    # queue.append(start_vertex)
-    # visited: bool = False
-
-    # while queue:    # loops while queue exists
-    #     start: IVertex = queue.pop(0)    # takes first element
-    #     nodes_visited.append(start)  # appends to final results
-    #     for key in adj_list:
-    #         for destination in adj_list[key]:
-    #             destination.is_visited()
-    #             queue.append(key)
-    #             visited: bool = True    
-    #             key.set_visited(visited) # sets vertex as visited
-
-    while queue:
-        start: IVertex = queue.pop(0)
-        nodes_visited.append(start)
-        #print(adj_list[start])
-                
-    #for i in range(len(nodes_visited)):
-    #    print(nodes_visited[i].get_name())
-    #print(nodes_visited)    # returns end result
-
-                
-            
-
-
-            
-
-
+    print(nodes_visited)    # returns end result
 
 
 
