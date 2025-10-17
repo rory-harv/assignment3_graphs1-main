@@ -50,7 +50,8 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
         '''Accepts a vertex, marks it as visited and appends to end result array.'''
         visited: bool = True
         vertex.set_visited(visited)
-        end_result.append(vertex.get_name())
+        if vertex not in end_result:
+            end_result.append(vertex)
 
     while stack:
         vertex: IVertex = stack.pop()
@@ -58,22 +59,23 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
             graph.add_vertex(vertex)
             visited: bool = True
             vertex.set_visited(visited)
-            end_result.append(vertex.get_name())
-            edges: List[IEdge] = start_vertex.get_edges()
+            end_result.append(vertex)
+            edges: List[IEdge] = vertex.get_edges()
             for edge in edges:
                 destination: IVertex = edge.get_destination()
                 if destination.is_visited() == False:
                     helper(destination)
                     stack.append(destination)
     
-    print(end_result)
+    for result in end_result:
+        print(result.get_name())
 
 
 
 def print_bfs(graph: IGraph, start_vertex: IVertex) -> None: 
     """Print the BFS traversal of the graph starting from the start vertex"""
     queue: List[IVertex] = []
-    nodes_visited: List[str] = []
+    nodes_visited: List[IVertex] = []
     visited: bool = False
 
     all_vertices = graph.get_vertices()
@@ -87,21 +89,28 @@ def print_bfs(graph: IGraph, start_vertex: IVertex) -> None:
     queue.append(start_vertex)
     visited: bool = False
 
+    adj_list: dict[IVertex, List[IVertex]] = {}
+
     while queue:    # loops while queue exists
         start: IVertex = queue.pop(0)    # takes first element
-        nodes_visited.append(start.get_name())  # appends to final results
-        for edge in start.get_edges():
+        if start not in nodes_visited:
+            nodes_visited.append(start)  # appends to final results
+        adj_list[start] = []
+
+        for edge in start.get_edges():  # create adj list for focused vertex
             destination = edge.get_destination()
-            if destination.is_visited() == False:
+            adj_list[start].append(destination)
+        
+        for vertex in adj_list[start]:  # loops through adjacency list for focused vertex
+            if vertex.is_visited() == False:
                 visited: bool = True    
-                destination.set_visited(visited) # sets vertex as visited
-                queue.append(destination)
-                visited: bool = False
-                if destination.get_name() not in nodes_visited:
-                    nodes_visited.append(destination.get_name())
+                vertex.set_visited(visited) # sets vertex as visited
+                queue.append(vertex)
+                if vertex not in nodes_visited:
+                    nodes_visited.append(vertex)
 
-    print(nodes_visited)    # returns end result
-
+    for node in nodes_visited:    # returns end result
+        print(node.get_name())
 
 
 
