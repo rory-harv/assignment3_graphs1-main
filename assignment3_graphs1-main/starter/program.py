@@ -8,20 +8,20 @@ def read_graph(file_path: str) -> IGraph:
     try: 
         with open(file_path, 'r') as f:
             next(f)
-            new_path = Graph()
+            new_path = Graph()  # creates new graph instance
             for line in f:
-                source, destination, highway, distance = line.strip().split(',')
-                source = Vertex(source)
+                source, destination, highway, distance = line.strip().split(',')    # gets info for new vertices/edges
+                source = Vertex(source) # turns string to vertex type
                 destination = Vertex(destination)
 
-                in_list: bool = False
+                in_list: bool = False   # base variable to determine if vertex already exists
                 for vertex in new_path.get_vertices():
                     if vertex.get_name() == source.get_name():
                         in_list = True
                         source = vertex
                         break
                 if in_list == False:
-                    new_path.add_vertex(source)
+                    new_path.add_vertex(source) # adds vertex to all graph vertices
 
                 in_list: bool = False
                 for vertex in new_path.get_vertices():
@@ -30,10 +30,10 @@ def read_graph(file_path: str) -> IGraph:
                         destination = vertex
                         break
                 if in_list == False:
-                    new_path.add_vertex(destination)
+                    new_path.add_vertex(destination)    # adds vertex to all graph vertices
 
-                highway = Edge(highway, distance, destination)
-                source.add_edge(highway)
+                highway = Edge(highway, distance, destination)  # creates new edge
+                source.add_edge(highway)    # connects new vertices w/ new edge
     
             return new_path
     except:
@@ -46,9 +46,9 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
     end_result: List[IVertex] = []
     visited: bool = False
 
-    all_vertices = graph.get_vertices()
+    all_vertices = graph.get_vertices() # gets all vertices for graph
 
-    for vertex in all_vertices:
+    for vertex in all_vertices: # defaults all vertices to be not visited
         vertex.set_visited(visited)
 
     visited: bool = True
@@ -63,7 +63,7 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
         '''Accepts a vertex, marks it as visited and appends to end result array.'''
         visited: bool = True
         vertex.set_visited(visited)
-        if vertex not in end_result:
+        if vertex not in end_result:    # adds to end result if not visited yet
             end_result.append(vertex)
 
     while stack:
@@ -76,9 +76,9 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
             destination = edge.get_destination()
             adj_list[start].append(destination)
 
-        for vertex in adj_list[start]:
+        for vertex in adj_list[start]:  # loops through adj list for focused vertex
             if vertex.is_visited() == False:
-                helper(vertex)
+                helper(vertex)  # invokes helper function
                 stack.append(vertex)
     
     print(('-'*10) + 'Depth First Search' + ('-'*10))
@@ -94,9 +94,9 @@ def print_bfs(graph: IGraph, start_vertex: IVertex) -> None:
     nodes_visited: List[IVertex] = []
     visited: bool = False
 
-    all_vertices = graph.get_vertices()
+    all_vertices = graph.get_vertices() # gets all graph vertices
 
-    for vertex in all_vertices:
+    for vertex in all_vertices: # sets all vertices to not visited
         vertex.set_visited(visited)
 
     visited: bool = True
@@ -122,7 +122,7 @@ def print_bfs(graph: IGraph, start_vertex: IVertex) -> None:
                 visited: bool = True    
                 vertex.set_visited(visited) # sets vertex as visited
                 queue.append(vertex)
-                if vertex not in nodes_visited:
+                if vertex not in nodes_visited: # checks if vertex already visited
                     nodes_visited.append(vertex)
 
     print(('-'*10) + 'Breadth First Search' + ('-'*10))
