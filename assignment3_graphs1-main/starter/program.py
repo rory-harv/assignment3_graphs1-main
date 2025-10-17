@@ -44,7 +44,20 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
     """Print the DFS traversal of the graph starting from the start vertex"""
     stack: List[IVertex] = []
     end_result: List[IVertex] = []
+    visited: bool = False
+
+    all_vertices = graph.get_vertices()
+
+    for vertex in all_vertices:
+        vertex.set_visited(visited)
+
+    visited: bool = True
+    start_vertex.set_visited(visited)   # sets starter vertex as visited
+
     stack.append(start_vertex)
+    visited: bool = False
+
+    adj_list: dict[IVertex, List[IVertex]] = {}
 
     def helper(vertex: IVertex) -> None:
         '''Accepts a vertex, marks it as visited and appends to end result array.'''
@@ -54,21 +67,24 @@ def print_dfs(graph: IGraph, start_vertex: IVertex) -> None:
             end_result.append(vertex)
 
     while stack:
-        vertex: IVertex = stack.pop()
-        if vertex.is_visited() == False:
-            graph.add_vertex(vertex)
-            visited: bool = True
-            vertex.set_visited(visited)
-            end_result.append(vertex)
-            edges: List[IEdge] = vertex.get_edges()
-            for edge in edges:
-                destination: IVertex = edge.get_destination()
-                if destination.is_visited() == False:
-                    helper(destination)
-                    stack.append(destination)
+        start: IVertex = stack.pop()    # takes last element
+        if start not in end_result:
+            end_result.append(start)  # appends to final results
+        adj_list[start] = []
+
+        for edge in start.get_edges():  # create adj list for focused vertex
+            destination = edge.get_destination()
+            adj_list[start].append(destination)
+
+        for vertex in adj_list[start]:
+            if vertex.is_visited() == False:
+                helper(vertex)
+                stack.append(vertex)
     
-    for result in end_result:
+    print(('-'*10) + 'Depth First Search' + ('-'*10))
+    for result in end_result:   # returns end result
         print(result.get_name())
+    print()
 
 
 
@@ -109,8 +125,10 @@ def print_bfs(graph: IGraph, start_vertex: IVertex) -> None:
                 if vertex not in nodes_visited:
                     nodes_visited.append(vertex)
 
+    print(('-'*10) + 'Breadth First Search' + ('-'*10))
     for node in nodes_visited:    # returns end result
         print(node.get_name())
+    print()
 
 
 
