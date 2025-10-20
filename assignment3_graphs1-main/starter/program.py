@@ -36,8 +36,8 @@ def read_graph(file_path: str) -> IGraph:
                 source.add_edge(highway)    # connects new vertices w/ new edge
     
             return new_path
-    except:
-        raise FileNotFoundError(f'{file_path} not found in directory.')
+    except Exception as m:
+        raise FileNotFoundError(f'{file_path} not found in directory. {str(m)}')
 
 
 def print_dfs(graph: IGraph, start_vertex: IVertex) -> None: 
@@ -133,7 +133,7 @@ def print_bfs(graph: IGraph, start_vertex: IVertex) -> None:
 
 
 def main() -> None:
-    graph: IGraph = read_graph("graph.txt")
+    graph: IGraph = read_graph("starter\\graph.txt")
     start_vertex_name: str  = input("Enter the start vertex name: ")
 
     # Find the start vertex object
