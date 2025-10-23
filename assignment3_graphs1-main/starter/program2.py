@@ -70,6 +70,7 @@ def get_heuristic(file_path: str, vertex_to: IVertex, vertex_from: IVertex) -> f
 
 def get_cost(graph: IGraph, vertex_to: IVertex, vertex_from: IVertex) -> float:
     '''Gets cost between two given points.'''
+    weight: float = 0
     all_vertices = graph.get_vertices()
 
     for vertex in all_vertices:
@@ -81,7 +82,7 @@ def get_cost(graph: IGraph, vertex_to: IVertex, vertex_from: IVertex) -> float:
 
     for edge in edges:
         if edge.get_destination() == vertex_from.get_name():
-            weight: float = edge.get_weight()
+            weight = edge.get_weight()
             break
     
     return weight
@@ -186,7 +187,7 @@ def main() -> None:
         print("Goal vertex not found")
         return
     
-    print(greedy_bfs(graph, start_vertex, goal_vertex))
+    print(dijkstra(graph, start_vertex, goal_vertex))
 
 if __name__ == '__main__':
     main()
