@@ -164,8 +164,40 @@ def greedy_bfs(graph: IGraph, start: IVertex, goal: IVertex) -> None:
 
 # a* algorithm
 
-def a_star():
-    pass
+def a_star(graph: IGraph, start: IVertex, goal: IVertex):
+    frontier = PriorityQueue()
+    file_path = "starter\\vertices_v1.txt"  # file path containing data for coordinates
+    h_val = get_heuristic(file_path, start, None)
+    frontier.put(start, h_val)  # adds start vertex to the frontier
+    explored: List[IVertex] = []
+    g_scores: dict[IVertex, int] = {start: 0}
+    f_scores: dict[IVertex, int] = {}
+    parent: dict[IVertex] = {}
+
+    while frontier:
+        current = frontier.get()
+        if current == goal:
+            reconstruct_path(parent, start, goal)
+        explored.append(current)
+        edges = current.get_edges() # evaluates neighbors for the vertex
+        neighbors = []
+        for edge in edges:
+            if edge not in neighbors:   # checks if already visited
+                neighbors.append(edge.get_destination())
+        for neighbor in neighbors:
+            index = neighbors.index(neighbor)
+            tentative_g = g_scores[current] + get_cost(graph, current, neighbors[index])    # calculates new g(n)
+            if neighbor not in explored:
+                if neighbor not in frontier.queue or tentative_g < g_scores[neighbor]:
+                    g_scores[neighbor] = tentative_g
+                    h_val = get_heuristic(file_path, current, neighbor)
+                    f_scores[neighbor] = g_scores[neighbor] + h_val
+                    parent[neighbor] = current
+                    frontier.put(neighbor, f_scores[neighbor])
+    print(f'Path from {start.get_name()} to {goal.get_name()} not found. ') # returns failure if no path found
+
+
+
 
 
 def main() -> None:
