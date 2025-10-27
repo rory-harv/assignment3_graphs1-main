@@ -94,6 +94,9 @@ class Vertex(IVertex):
 
     def is_visited(self) -> bool:
         return self._visited
+    
+    def __str__(self) -> str:
+        return self._name
 
 class Edge(IEdge):
 

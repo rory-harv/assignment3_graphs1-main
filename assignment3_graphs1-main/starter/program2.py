@@ -93,8 +93,13 @@ def reconstruct_path(parent: dict[IVertex], start: IVertex, goal: IVertex) -> No
     path: List[IVertex] = []
     current = goal
     while current is not None:  # while there are vertices left to travel to 
+        if current == start:
+            path.append(current)
+            break
         path.append(current)
+        print(parent[current].get_name())
         current = parent[current]
+
     path = path[::-1]   # reverses path since the vertices are appended from last to first
 
     print(f'Path from {start.get_name()} to {goal.get_name()}: ')
@@ -106,12 +111,13 @@ def reconstruct_path(parent: dict[IVertex], start: IVertex, goal: IVertex) -> No
 
 def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
     frontier = PriorityQueue()
-    frontier.put(start, 0)  # adds start vertex to the frontier
+    frontier.put((0, start))  # adds start vertex to the frontier
     explored: List[IVertex] = []
     g_scores: dict[IVertex, int] = {start: 0}
     parent: dict[IVertex] = {}
 
     while frontier: # loops while frontier not empty
+        cost: float = 0
         current = frontier.get()    # pops vertex with lowest g(n)
         if current == goal:
             reconstruct_path(parent, start, goal)   # return final path
@@ -119,16 +125,17 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
         edges = current.get_edges() # gets all neighbors of current
         neighbors = []
         for edge in edges:
-            if edge not in neighbors:   # checks if already visited
+            if edge.get_destination() not in neighbors:   # checks if already visited
                 neighbors.append(edge.get_destination())
+                g_scores[edge.get_destination()] = get_cost(graph, current, edge.get_destination())
         for neighbor in neighbors:
-            index = neighbors.index(neighbor)
-            tentative_g = g_scores[current] + get_cost(graph, current, neighbors[index])    # calculates new g(n)
+            cost += g_scores[neighbor]
+            tentative_g = g_scores[current] + cost    # calculates new g(n)
             if neighbor not in explored:
                 if neighbor not in frontier.queue or tentative_g < g_scores[neighbor]:  # checks whether to add to frontier
                     g_scores[neighbor] = tentative_g
                     parent[neighbor] = current
-                    frontier.put(neighbor, tentative_g)
+                    frontier.put((tentative_g, neighbor))
     print(f'Path from {start.get_name()} to {goal.get_name()} not found. ') # returns failure if no path found
 
 
@@ -139,14 +146,16 @@ def greedy_bfs(graph: IGraph, start: IVertex, goal: IVertex) -> None:
     frontier = PriorityQueue()
     file_path = "starter\\vertices_v1.txt"  # file path containing data for coordinates
     h_val = get_heuristic(file_path, start, None)
-    frontier.put(start, h_val)  # adds start vertex to the frontier
+    frontier.put((h_val, start))  # adds start vertex to the frontier
     explored: List[IVertex] = []
     parent: dict[IVertex] = {}
 
     while frontier: # loops while something in frontier
-        current = frontier.get()    # pops vertex in frontier with the lowest h(n)
+        first = frontier.get()
+        current = first[1]    # pops vertex in frontier with the lowest h(n)
         if current == goal:
             reconstruct_path(parent, start, goal) # return reconstructed path
+            return ""
         explored.append(current)
         edges = current.get_edges() # evaluates neighbors for the vertex
         neighbors = []
@@ -154,10 +163,12 @@ def greedy_bfs(graph: IGraph, start: IVertex, goal: IVertex) -> None:
             if edge not in neighbors:   # checks if already visited
                 neighbors.append(edge.get_destination())
         for neighbor in neighbors:
+            #found = any(neighbor in item for item in frontier.queue)
             if neighbor not in explored and neighbor not in frontier.queue: # not explored/evaluated yet
                 parent[neighbor] = current
                 h_val = get_heuristic(file_path, current, neighbor)
-                frontier.put(neighbor, h_val)
+                frontier.put((h_val, neighbor))
+    
     print(f'Path from {start.get_name()} to {goal.get_name()} not found. ') # returns failure if no path found
 
 
@@ -219,7 +230,7 @@ def main() -> None:
         print("Goal vertex not found")
         return
     
-    print(dijkstra(graph, start_vertex, goal_vertex))
+    print(greedy_bfs(graph, start_vertex, goal_vertex))
 
 if __name__ == '__main__':
     main()
