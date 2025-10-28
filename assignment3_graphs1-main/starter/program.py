@@ -32,7 +32,7 @@ def read_graph(file_path: str) -> IGraph:
                 if in_list == False:
                     new_path.add_vertex(destination)    # adds vertex to all graph vertices
 
-                highway = Edge(highway, distance, destination)  # creates new edge
+                highway = Edge(highway, float(distance), destination)  # creates new edge
                 source.add_edge(highway)    # connects new vertices w/ new edge
     
             return new_path

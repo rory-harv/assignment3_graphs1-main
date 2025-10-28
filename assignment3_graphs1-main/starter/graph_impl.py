@@ -103,7 +103,7 @@ class Edge(IEdge):
     def __init__(self, name: str, weight: float, destination: IVertex):
         self._name: str = name
         self._vertices: List[Vertex] = []
-        self._weight: float = 0
+        self._weight: float = weight
         self._destination: IVertex = destination
 
     def get_name(self) -> str: 
