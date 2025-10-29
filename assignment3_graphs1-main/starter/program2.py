@@ -136,7 +136,7 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
 
     while not frontier.empty(): # loops while frontier not empty
         first = frontier.get()
-        current = first[1]    # pops vertex with lowest g(n)
+        current: IVertex = first[1]    # pops vertex with lowest g(n)
         vertices_explored += 1
         if current == goal:
             end_time = time.perf_counter()
@@ -155,9 +155,10 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
         for neighbor in neighbors:
             tentative_g = cost_so_far[current] + get_cost(graph, current, neighbor) # updates g(n) for neighbor
             if neighbor not in explored:
-                if neighbor not in frontier.queue or tentative_g < cost_so_far[neighbor]:  # checks whether to add to frontier
+                if (cost_so_far[neighbor], neighbor) not in frontier.queue or tentative_g < cost_so_far[neighbor]:  # checks whether to add to frontier
                     cost_so_far[neighbor] = tentative_g
                     parent[neighbor] = current  # sets parent
+                    print(frontier.queue)
                     frontier.put((tentative_g, neighbor))   # adds neighbor to frontier
     
     print(f'Path from {start.get_name()} to {goal.get_name()} not found. ') # returns failure if no path found
@@ -180,7 +181,7 @@ def greedy_bfs(graph: IGraph, start: IVertex, goal: IVertex) -> None:
 
     while not frontier.empty(): # loops while something in frontier
         first = frontier.get()
-        current = first[1]    # pops vertex in frontier with the lowest h(n)
+        current: IVertex = first[1]    # pops vertex in frontier with the lowest h(n)
         vertices_explored += 1
         if current == goal:
             end_time = time.perf_counter()
@@ -227,7 +228,7 @@ def a_star(graph: IGraph, start: IVertex, goal: IVertex):
 
     while frontier:
         first = frontier.get()  # pops lowest f(n)
-        current = first[1]
+        current: IVertex = first[1]
         vertices_explored += 1
         if current == goal:
             end_time = time.perf_counter()
