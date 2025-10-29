@@ -12,7 +12,7 @@ Part A. Program Usage Instructions
 
 -> When prompted, the user inputs a command into the terminal for their choice of algorithm. They will be prompted with 3 choices of algorithms, and depending on their input (1-3), said corresponding algorithm wull be initiated. 
 
--> Example Runs:
+-> Random Example Runs:
 -- -------------------------------------------------------------------------------------
 
 Select Pathfinding Algorithm:
@@ -87,10 +87,20 @@ Thank you for using Oregon Pathfinder!
 
 Part B. Algorithm Analysis
 
-
+Locate Project 2 Analysis - RH .txt file in full repository.
 
 
 ------------------------------------------------------------------------------------
+
+Test Cases
+
+Locate Project 2 Analysis - RH .txt file in full repository. 
+-> If desired, reach out for PDF copy of test case breakdown which is better-composed in a table format rather than a .txt file. 
+
+
+
+
+
 ------------------------------------------------------------------------------------
 Assignment 3:
 

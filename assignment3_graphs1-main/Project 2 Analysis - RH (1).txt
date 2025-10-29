@@ -1,0 +1,344 @@
+﻿Project 2 Analysis
+Rory Harvey
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+1. Empirical Observations:
+
+
+Test Case 1: Short Distance
+-> Fewest Vertices Explored: Equal (2 vertices)
+-> Found Optimal Path (Distances): Equal (47.0 miles)
+With a short/direct path, since the searched vertices have one connecting edge, all the algorithms find said edge and return its information within the same amount of exploration (vertices, edges, and overall distance travelled). See tables below for specific number/value examples for this test case. 
+
+
+Test Case 3: Long Distance
+-> Fewest Vertices Explored: Greedy Best-First Search (17 vertices)
+-> Found Optimal Path (Distances): A* (329.0 miles)
+With a long distance/non-direct path, GBFS searches the fewest number of vertices because it takes only heuristics into account, and less about the actual distance that is being travelled, so its path costs more, despite it being a less efficient cost overall. A* found the most optimal path by searching the largest number of vertices in order to find a path with a low cost g(n) and a low heuristic cost h(n). See tables below for specific number/value examples for this test case. 
+
+
+Test Case 5: Coastal vs. Inland
+-> Fewest Vertices Explored: Greedy Best-First Search (16 vertices)
+-> Found Optimal Path (Distances): A* (314.0 miles)
+With a longer/non-direct path, we see the same reasoning for this test case as Test Case 3 above, which heuristic versus actual cost results with A* finding the most optimal path, and GBFS searching the lowest number of vertices overall. See tables below for specific number/value examples for this test case. 
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+2. Use Case Analysis:
+
+
+* Dijkstra’s performed “better” on all test cases in terms of execution time, but in terms of finding the most optimal path, it only performed equally to other algorithms on Test Case 1, Test Case 2, and Test Case 4. 
+
+
+* For longer distance paths, or vertices with a large amount of neighbors/connections in its adjacency list, Greedy Best-First Search will most likely produce suboptimal paths due to the fact that it goes vertex-by-vertex, rather than evaluating possible paths and selecting the best choice overall. It is challenging, as it operates “blind” in comparison to the other search algorithms, and for longer paths, it usually takes a longer route than necessary. 
+
+
+* A* performed best on Test Case 3 and Test Case 5, producing a significantly shorter/more optimal path than the other algorithms. These scenarios use longer overall distances/paths (in terms of minimum vertices that must be traversed) and have many scenarios where GBFS and Dijkstra’s might find “ties”. A* using both the heuristic and actual/distance costs results in a more thorough search, and explores more options without, like Dijkstra’s, exhausting the algorithm and increasing initial execution time. 
+
+
+* I would use GBFS in real life if I was only travelling along major highways in real life, and was travelling a relatively short distance. I would use Dijkstra’s when travelling a path that I frequent often, since the initial path search takes the longest execution time, then drastically decreases in future searches due to the way it caches memory. I would use A* on a path that is longer or more intricate (like using backroads and highways) to find the “best of both worlds” in terms of execution time and overall distance travelled. 
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+3. Runtime Complexity Analysis:
+
+
+Dijkstra’s Algorithm:
+Theoretical Time Complexity: O((V + E) log V)
+Theoretical Space Complexity: O(V + E)
+Oregon Map Size (|V| = 22, |E| = 52) -> Slight/moderate increase in execution time due to larger E (log V NOT log E so E is still dominating term).
+Larger Map -> The initial searches of certain paths would decrease overall execution time, but secondary searches of said paths would be significantly more efficient in comparison to other search algorithms due to cache storage. 
+-> An initial search can have a longer execution time, but the way that Dijkstra's stores memory ensures for much lower execution times once certain paths have already been travelled, leading to a higher overall efficiency for more advanced path searching. 
+
+
+Greedy Best-First Search Algorithm:
+Theoretical Time Complexity: O(V^E)
+Theoretical Space Complexity: O(V^E)
+Oregon Map Size (|V| = 22, |E| = 52) -> Extreme increase in execution time due to larger E (E is the dominating term).
+Larger Map -> Will run on a longer execution time, especially if travelling on non-main highways, since it will have a plethora of edges to search with minimal direction within its search, and will also produce a less-optimal path. 
+-> Can have shorter execution times than an initial Dijkstra search or an A* search, but it does not guarantee an optimal path, especially for longer distances/more complicated travel paths. 
+
+
+A* Algorithm:
+Theoretical Time Complexity: O((V + E) log V)
+Theoretical Space Complexity: O(V + E)
+Oregon Map Size (|V| = 22, |E| = 52) -> Slight/moderate increase in execution time due to larger E (log V NOT log E so E is still dominating term).
+Larger Map -> The more intricacies of the search (longer distance or more neighboring vertices) would result in a much larger execution time due to combined nature of the A* algorithm and it’s lengthy search. 
+-> Can have a longer execution time than secondary Dijkstra’s searches and GBFS, but usually will find a more optimal path since it is working on both physical distance and heuristic values combined (best of both worlds). 
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+4. Heuristic Discussion:
+
+
+* The Haversine distance is admissible for the A* algorithm because it is real-world based and uses the radius of the Earth as a measurement for distance, and relies on the vertices real-life coordinates. This distance is useful in an A* algorithm because it won't overestimate anything, and, in turn, will not send the A* algorithm on an unnecessary search-spree. 
+
+
+* When the heuristic is underestimated heavily, the Greedy Best-First Search algorithm has the capacity to over-explore, and miss more optimal paths in favor of following what it simply thinks to be the most optimal. The paths will increase in length, and so will the overall execution time of the algorithm. 
+
+
+* Since we were given the coordinates of each vertex/city in exact latitude and longitude coordinates, and the Haversine distance is very accurate, I’m not sure if there would be a better heuristic for this problem that is truly based on travelling the shortest distance possible. To me, the Haversine distance can accurately look at factors like altitude that go into path finding algorithms/searches for optimal paths. 
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+Test Case 1: Short Distance
+
+
+Path from Portland to Salem
+
+
+
+
+	Dijkstra’s Algorithm
+	Greedy Best-First Search
+	A* Algorithm
+	Path
+	-> Portland
+-> Salem
+	-> Portland
+-> Salem
+	-> Portland
+-> Salem
+	Distance Travelled
+	47.0 miles
+	47.0 miles
+	47.0 miles
+	Vertices Explored
+	2
+	2
+	2
+	Edges Explored
+	4
+	4
+	4
+	Execution Time
+	0.00010020006448030472 seconds
+	0.0022706000600010157 seconds
+	0.002431500004604459 seconds
+
+
+	
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+Test Case 2: Medium Distance
+
+
+Path from Portland to Eugene
+
+
+
+
+	Dijkstra’s Algorithm
+	Greedy Best-First Search
+	A* Algorithm
+	Path
+	-> Portland
+-> Salem
+-> Corvallis
+-> Eugene
+	-> Portland
+-> Salem
+-> Corvallis
+-> Eugene
+	-> Portland
+-> Salem
+-> Corvallis
+-> Eugene
+	Distance Travelled
+	129.0 miles
+	129.0 miles
+	129.0 miles
+	Vertices Explored
+	9
+	4
+	6
+	Edges Explored
+	23
+	10
+	15
+	Execution Time
+	0.00018809991888701916 seconds
+	0.004337699851021171 seconds
+	0.005029899999499321 seconds
+
+
+	
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+Test Case 3: Long Distance
+
+
+Path from Portland to Ashland
+
+
+
+
+	Dijkstra’s Algorithm
+	Greedy Best-First Search
+	A* Algorithm
+	Path
+	-> Portland
+-> Salem
+-> Corvallis
+-> Newport
+-> Florence
+-> Coos_Bay
+-> Roseburg
+-> Medford
+-> Ashland
+	-> Portland
+-> Salem
+-> Corvallis
+-> Newport
+-> Florence
+-> Coos_Bay
+-> Roseburg
+-> Medford
+-> Ashland
+	-> Portland
+-> Salem
+-> Corvallis
+-> Eugene
+-> Crater_Lake
+-> Medford
+-> Ashland
+
+
+	Distance Travelled
+	428.0 miles
+	428.0 miles
+	329.0 miles
+	Vertices Explored
+	29
+	17
+	32
+	Edges Explored
+	75
+	48
+	83
+	Execution Time
+	0.0005707999225705862 seconds
+	0.003317400114610791 seconds
+	0.013974800007417798 seconds
+
+
+	
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+Test Case 4: Diagonal Route
+
+
+Path from Portland to Burns
+
+
+
+
+	Dijkstra’s Algorithm
+	Greedy Best-First Search
+	A* Algorithm
+	Path
+	-> Portland
+-> Hood_River
+-> The_Dalles
+-> Madras
+-> Redmond
+-> Bend
+-> Burns
+	-> Portland
+-> Hood_River
+-> The_Dalles
+-> Madras
+-> Redmond
+-> Bend
+-> Burns
+	-> Portland
+-> Hood_River
+-> The_Dalles
+-> Madras
+-> Redmond
+-> Bend
+-> Burns
+	Distance Travelled
+	351.0 miles
+	351.0 miles
+	351.0 miles
+	Vertices Explored
+	26
+	30
+	36
+	Edges Explored
+	68
+	79
+	93
+	Execution Time
+	0.00028609996661543846 seconds
+	0.010867000091820955 seconds
+	0.01818120013922453 seconds
+
+
+	
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+Test Case 5: Coastal vs. Inland
+
+Path from Portland to Medford
+
+
+
+
+	Dijkstra’s Algorithm
+	Greedy Best-First Search
+	A* Algorithm
+	Path
+	-> Portland
+-> Salem
+-> Corvallis
+-> Newport
+-> Florence
+-> Coos_Bay
+-> Roseburg
+-> Medford
+	-> Portland
+-> Salem
+-> Corvallis
+-> Newport
+-> Florence
+-> Coos_Bay
+-> Roseburg
+-> Medford
+	-> Portland
+-> Salem
+-> Corvallis
+-> Eugene
+-> Crater_Lake
+-> Medford
+	Distance Travelled
+	413.0 miles
+	413.0 miles
+	314.0 miles
+	Vertices Explored
+	27
+	16
+	31
+	Edges Explored
+	69
+	45
+	80
+	Execution Time
+	0.000443900004029274 seconds
+	0.007323300000280142 seconds
+	0.006225100019946694 seconds
+
+
+	
+
+-------------------------------------------------------------------------------------------------------------------------------
