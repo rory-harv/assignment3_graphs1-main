@@ -135,7 +135,7 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
     cost_so_far[start] = 0
 
     while not frontier.empty(): # loops while frontier not empty
-        first = frontier.get()
+        first = frontier.queue.pop(0)
         current: IVertex = first[1]    # pops vertex with lowest g(n)
         vertices_explored += 1
         if current == goal:
@@ -146,7 +146,7 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
             return ""   # ends while loop
         explored.append(current)
         edges = current.get_edges() # gets all neighbors of current
-        neighbors = []
+        neighbors: List[IVertex] = []
         for edge in edges:
             if edge.get_destination() not in neighbors:   # checks if already visited
                 neighbors.append(edge.get_destination())
@@ -155,11 +155,11 @@ def dijkstra(graph: IGraph, start: IVertex, goal: IVertex) -> None:
         for neighbor in neighbors:
             tentative_g = cost_so_far[current] + get_cost(graph, current, neighbor) # updates g(n) for neighbor
             if neighbor not in explored:
-                if (cost_so_far[neighbor], neighbor) not in frontier.queue or tentative_g < cost_so_far[neighbor]:  # checks whether to add to frontier
+                if neighbor not in frontier.queue or tentative_g < cost_so_far[neighbor]:  # checks whether to add to frontier
                     cost_so_far[neighbor] = tentative_g
                     parent[neighbor] = current  # sets parent
-                    print(frontier.queue)
-                    frontier.put((tentative_g, neighbor))   # adds neighbor to frontier
+                    if (cost_so_far[neighbor], neighbor) not in frontier.queue:
+                        frontier.put((tentative_g, neighbor))   # adds neighbor to frontier
     
     print(f'Path from {start.get_name()} to {goal.get_name()} not found. ') # returns failure if no path found
 
